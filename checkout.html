@@ -54,40 +54,42 @@
 
     // Handle payment process
     function proceedToPayment() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      fetch('http://localhost:3000/get-snap-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ items: cart, total_price: totalPrice })
-      })
-      .then(response => response.json())
-      .then(data => {
-        snap.pay(data.token, {
-          onSuccess: function(result) {
-            alert('Payment successful!');
-            localStorage.removeItem('cart');
-            window.location.href = 'thankyou.html';
-          },
-          onPending: function(result) {
-            alert('Payment pending.');
-          },
-          onError: function(result) {
-            alert('Payment failed.');
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to process payment. Please try again.');
-      });
-    }
+  // Mengambil API token dari Vercel
+  fetch('/api/get-snap-token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ items: cart, total_price: totalPrice })
+  })
+  .then(response => response.json())
+  .then(data => {
+    snap.pay(data.snapToken, {
+      onSuccess: function(result) {
+        alert('Payment successful!');
+        localStorage.removeItem('cart');
+        window.location.href = 'thankyou.html';
+      },
+      onPending: function(result) {
+        alert('Payment pending.');
+      },
+      onError: function(result) {
+        alert('Payment failed.');
+      }
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Failed to process payment. Please try again.');
+  });
+}
 
-    // Load cart on page load
-    window.onload = loadCart;
+// Load cart on page load
+window.onload = loadCart;
+
   </script>
 </head>
 
