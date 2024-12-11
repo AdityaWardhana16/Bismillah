@@ -12,7 +12,7 @@ app.use(cors());
 
 // Midtrans configuration
 const snap = new midtransClient.Snap({
-  isProduction: false, // Set to true for production
+  isProduction: false, // Set to true for productionz
   serverKey: 'SB-Mid-server-uUYq993Y52YQXPP2XJ1mSmR_', // Ganti dengan server key Anda
 });
 
@@ -48,6 +48,7 @@ app.post('/get-snap-token', async (req, res) => {
     res.status(500).json({ error: 'Failed to create transaction.' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
